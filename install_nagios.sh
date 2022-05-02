@@ -13,7 +13,7 @@ cat << Message2
 ************************************EDITING FILES************************************
 Message2
 
-echo "Enter facility name below:"
+echo "Enter server name below:"
 facility_name=""
 while [[ $facility_name = "" ]]; do
    read facility_name
