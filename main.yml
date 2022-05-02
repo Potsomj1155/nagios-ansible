@@ -81,6 +81,7 @@
       with_items:
         - a2enmod rewrite
         - a2enmod cgi
+        - usermod -a -G nagios www-data
       become: true
       
     - name: "Create web acces user(nagiosadmin pass=Icap@123)"
