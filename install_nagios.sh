@@ -1,4 +1,4 @@
-#! /usr/bin/bash
+#! /bin/bash
 
 cat << Message1
 *********************************INSTALLING ANSIBLE**********************************
