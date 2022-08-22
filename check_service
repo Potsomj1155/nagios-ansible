@@ -53,12 +53,31 @@ while test -n "$1"; do
     shift
 done
 
-if systemctl is-active $SERVICE >/dev/null 2>&1
-then
-    echo -e "OK: Service $SERVICE is running!"
-    exit $OK
-else
-    echo -e "CRITICAL: Service $SERVICE is not running!"
-    exit $CRITICAL
-fi
+EXITCODE=$(systemctl status $SERVICE |grep 'Main PID' | grep status | awk '{print $NF}' | sed 's/)//g' | sed 's/status=//')
 
+if [ "$EXITCODE" == "0/SUCCESS" ] 
+then
+        echo -e "OK: $SERVICE status = 0/success"
+        exit $OK
+
+elif [ "$EXITCODE" == "128" ] 
+then
+	echo -e "CRITICAL: $SERVICE exit code = 128, might be user/permissions problem"
+	exit $CRITICAL
+
+elif [ "$EXITCODE" == "203" ] || [ "$EXITCODE" == "203/EXEC" ]
+then
+	echo -e "CRITICAL: exit code = 203, executable file unaccessible"
+	exit $CRITICAL
+
+else
+	if systemctl is-active $SERVICE >/dev/null 2>&1
+	then
+    		echo -e "OK: $SERVICE is running"
+    		exit $OK
+	else
+    		echo -e "CRITICAL: $SERVICE is not running!"
+    		exit $CRITICAL
+	fi
+
+fi
